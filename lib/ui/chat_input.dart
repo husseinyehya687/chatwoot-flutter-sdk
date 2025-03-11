@@ -86,16 +86,16 @@ class _ChatInputState extends State<ChatInput> {
               ),
             ),
             // Attachment Icon
-     if(widget.theme.attachmentEnabled) 
-            IconButton(
-              onPressed: () {
-                widget.onAttachmentPressed();
-              },
-              icon: const Icon(
-                Icons.attach_file,
-                color: Colors.grey,
-              ),
-            ),
+     // if(widget.theme.attachmentEnabled) 
+     //        IconButton(
+     //          onPressed: () {
+     //            widget.onAttachmentPressed();
+     //          },
+     //          icon: const Icon(
+     //            Icons.attach_file,
+     //            color: Colors.grey,
+     //          ),
+     //        ),
             // Emoji Icon
             IconButton(
               onPressed: _submit,
