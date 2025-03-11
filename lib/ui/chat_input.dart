@@ -58,7 +58,7 @@ class _ChatInputState extends State<ChatInput> {
             ),
           ]
               : [],
-          color: Colors.white,
+                    color: widget.theme.inputBackgroundColor ?? Colors.white,
         ),
         child: Row(
           children: [
@@ -67,6 +67,9 @@ class _ChatInputState extends State<ChatInput> {
               child: TextField(
                 controller: _controller,
                 focusNode: _focusNode,
+                  style: TextStyle(
+                  color: widget.theme.inputTextColor
+                ),
                 decoration: InputDecoration(
                   hintText: widget.l10n.inputPlaceholder,
                   border: InputBorder.none,
@@ -83,6 +86,7 @@ class _ChatInputState extends State<ChatInput> {
               ),
             ),
             // Attachment Icon
+     if(widget.theme.attachmentEnabled) 
             IconButton(
               onPressed: () {
                 widget.onAttachmentPressed();
