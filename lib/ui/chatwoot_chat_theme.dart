@@ -23,7 +23,6 @@ class ChatwootChatTheme extends ChatTheme {
     ),
     Widget? deliveredIcon,
     Widget? documentIcon,
-   bool attachmentEnabled,
     TextStyle emptyChatPlaceholderTextStyle = const TextStyle(
       color: Colors.black54,
       fontSize: 16,
