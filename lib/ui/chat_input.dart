@@ -86,7 +86,7 @@ class _ChatInputState extends State<ChatInput> {
               ),
             ),
             // Attachment Icon
-     // if(widget.theme.attachmentEnabled) 
+     
      //        IconButton(
      //          onPressed: () {
      //            widget.onAttachmentPressed();
