@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: ChatwootChat(
+
         inboxIdentifier: "your-api-inbox-identifier",
         userIdentityValidationKey: "your-hmac-user-validation-key",
         baseUrl: "https://app.chatwoot.com",
