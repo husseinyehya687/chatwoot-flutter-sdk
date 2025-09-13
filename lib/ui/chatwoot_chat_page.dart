@@ -683,7 +683,7 @@ class _ChatwootChatState extends State<ChatwootChat> with WidgetsBindingObserver
                     onEndReached: widget.onEndReached,
                     onEndReachedThreshold: widget.onEndReachedThreshold,
                     onMessageLongPress: widget.onMessageLongPress,
-                    onAttachmentPressed: (){},
+                    onAttachmentPressed: _handleAttachmentPressed,
                     showUserAvatars: widget.showUserAvatars,
                     showUserNames: widget.showUserNames,
                     theme: theme,

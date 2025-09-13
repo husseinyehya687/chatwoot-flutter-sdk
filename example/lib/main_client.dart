@@ -95,15 +95,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   Future<FileAttachment?> _handleFileSelection() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
-    );
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+      );
 
-    if (result?.files.isNotEmpty ?? false) {
-      final bytes = await File(result!.files.first.path!).readAsBytes();
-      final name = result.files.first.name;
-      final path = result.files.first.path ?? '';
-      return FileAttachment(bytes: Uint8List.fromList(bytes), name: name, path: path);
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        if (file.path != null) {
+          final bytes = await File(file.path!).readAsBytes();
+          return FileAttachment(
+            bytes: Uint8List.fromList(bytes), 
+            name: file.name, 
+            path: file.path!
+          );
+        }
+      }
+    } catch (e) {
+      print('Error picking file: $e');
     }
 
     return null;
