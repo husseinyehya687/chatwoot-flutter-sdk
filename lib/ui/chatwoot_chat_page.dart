@@ -22,6 +22,8 @@ import 'package:intl/intl.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mime/mime.dart';
+import '../utils/permission_helper.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
@@ -603,6 +605,25 @@ class _ChatwootChatState extends State<ChatwootChat> with WidgetsBindingObserver
 
   void _handleAttachmentPressed() async{
     print('_handleAttachmentPressed called');
+    
+    // Check and request permissions first
+    bool hasPermission = await PermissionHelper.hasStoragePermissions();
+    if (!hasPermission) {
+      print('Storage permission not granted, requesting...');
+      hasPermission = await PermissionHelper.requestStoragePermissions();
+      
+      if (!hasPermission) {
+        print('Storage permission denied');
+        // Show user-friendly message about permission requirement
+        if (await PermissionHelper.isPermissionPermanentlyDenied()) {
+          _showPermissionPermanentlyDeniedDialog();
+        } else {
+          _showPermissionDeniedDialog();
+        }
+        return;
+      }
+    }
+    
     final attachment = await widget.onAttachmentPressed?.call();
     print('Attachment result: $attachment');
     if(attachment != null){
@@ -654,6 +675,60 @@ class _ChatwootChatState extends State<ChatwootChat> with WidgetsBindingObserver
       chatwootClient!
           .sendMessage(content: attachment.name, echoId: message.id, attachment: [attachment]);
     }
+  }
+
+  void _showPermissionDeniedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(widget.l10n.permissionRequired),
+          content: Text(widget.l10n.attachmentPermissionMessage),
+          actions: [
+            TextButton(
+              child: Text(widget.l10n.cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(widget.l10n.retry),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _handleAttachmentPressed(); // Retry
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showPermissionPermanentlyDeniedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(widget.l10n.permissionRequired),
+          content: Text(widget.l10n.attachmentPermissionPermanentlyDeniedMessage),
+          actions: [
+            TextButton(
+              child: Text(widget.l10n.cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(widget.l10n.openSettings),
+              onPressed: () {
+                Navigator.of(context).pop();
+                openAppSettings(); // Opens app settings
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 

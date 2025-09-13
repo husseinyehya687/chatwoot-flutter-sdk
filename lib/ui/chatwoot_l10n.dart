@@ -62,6 +62,24 @@ class ChatwootL10n extends ChatL10n {
   /// Message displayed to user after completing csat survey
   final String csatThankYouMessage;
 
+  /// Permission required dialog title
+  final String permissionRequired;
+
+  /// Message explaining why attachment permission is needed
+  final String attachmentPermissionMessage;
+
+  /// Message for permanently denied permission
+  final String attachmentPermissionPermanentlyDeniedMessage;
+
+  /// Cancel button text
+  final String cancel;
+
+  /// Retry button text
+  final String retry;
+
+  /// Open Settings button text
+  final String openSettings;
+
   /// Creates a new chatwoot l10n
   const ChatwootL10n(
       {this.attachmentButtonAccessibilityLabel = "",
@@ -84,7 +102,13 @@ class ChatwootL10n extends ChatL10n {
         this.csatSatisfied = "Good",
         this.csatVerySatisfied = "Excellent",
         this.csatFeedbackPlaceholder = "Leave your feedback (optional)...",
-        this.csatThankYouMessage = "Thank you for your feedback"
+        this.csatThankYouMessage = "Thank you for your feedback",
+        this.permissionRequired = "Permission Required",
+        this.attachmentPermissionMessage = "Storage permission is required to attach files. Please grant permission to continue.",
+        this.attachmentPermissionPermanentlyDeniedMessage = "Storage permission was permanently denied. Please enable it in app settings to attach files.",
+        this.cancel = "Cancel",
+        this.retry = "Retry",
+        this.openSettings = "Open Settings"
     })
       : super(
             attachmentButtonAccessibilityLabel:

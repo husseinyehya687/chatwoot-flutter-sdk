@@ -92,26 +92,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<FileAttachment?> _handleAttachmentPressed() async{
     print('_handleAttachmentPressed in main_client called');
-    
-    final result = await _handleFileSelection();
-    print('File selection result: $result');
-    
-    // Show result to user for debugging
-    if (result != null) {
-      print('Successfully selected file: ${result.name}, size: ${result.bytes.length}');
-    } else {
-      print('No file selected or selection failed');
-    }
-    
-    return result;
+    return await _handleFileSelection();
   }
 
 
   Future<FileAttachment?> _handleFileSelection() async {
     try {
+      print('Starting file picker...');
       final result = await FilePicker.platform.pickFiles(
         type: FileType.any,
         allowMultiple: false,
+        withData: false,
       );
 
       if (result != null && result.files.isNotEmpty) {
