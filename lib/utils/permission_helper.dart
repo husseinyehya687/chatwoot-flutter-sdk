@@ -83,32 +83,21 @@ class PermissionHelper {
 
   static Future<bool> _requestAndroid13Permissions() async {
     try {
-      // For Android 13+, try multiple strategies
       print('Requesting Android 13+ permissions...');
       
-      // First try photos permission (most commonly used)
-      final photosStatus = await Permission.photos.request();
-      print('Photos permission status: $photosStatus');
+      // For file attachments, we primarily need READ_MEDIA_IMAGES
+      // Request them all together as a group
+      final Map<Permission, PermissionStatus> permissions = await [
+        Permission.photos,  // READ_MEDIA_IMAGES
+        Permission.storage, // Fallback for older behavior
+      ].request();
       
-      if (photosStatus.isGranted) {
-        return true;
-      }
+      print('Photos permission status: ${permissions[Permission.photos]}');
+      print('Storage permission status: ${permissions[Permission.storage]}');
       
-      // If photos failed, try videos
-      final videosStatus = await Permission.videos.request();  
-      print('Videos permission status: $videosStatus');
-      
-      if (videosStatus.isGranted) {
-        return true;
-      }
-      
-      // As a last resort, try the old storage permission 
-      // (some devices might still respect it)
-      print('Trying legacy storage permission as fallback...');
-      final storageStatus = await Permission.storage.request();
-      print('Storage permission status: $storageStatus');
-      
-      return storageStatus.isGranted;
+      // Return true if either permission was granted
+      return permissions[Permission.photos]?.isGranted == true ||
+             permissions[Permission.storage]?.isGranted == true;
       
     } catch (e) {
       print('Error requesting Android 13+ permissions: $e');
