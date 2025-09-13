@@ -52,13 +52,13 @@ class _ChatInputState extends State<ChatInput> {
           boxShadow: _isFocused
               ? [
             BoxShadow(
-              color: widget.theme.primaryColor.withOpacity(0.2),
+              color: widget.theme.primaryColor.withValues(alpha: 0.2),
               blurRadius: 6.0,
               spreadRadius: 2.0,
             ),
           ]
               : [],
-                    color: widget.theme.inputBackgroundColor ?? Colors.white,
+                    color: widget.theme.inputBackgroundColor,
         ),
         child: Row(
           children: [
@@ -87,15 +87,15 @@ class _ChatInputState extends State<ChatInput> {
             ),
             // Attachment Icon
      
-     //        IconButton(
-     //          onPressed: () {
-     //            widget.onAttachmentPressed();
-     //          },
-     //          icon: const Icon(
-     //            Icons.attach_file,
-     //            color: Colors.grey,
-     //          ),
-     //        ),
+            IconButton(
+              onPressed: () {
+                widget.onAttachmentPressed();
+              },
+              icon: const Icon(
+                Icons.attach_file,
+                color: Colors.grey,
+              ),
+            ),
             // Emoji Icon
             IconButton(
               onPressed: _submit,

@@ -123,7 +123,7 @@ class _LinkPreviewState extends State<LinkPreview> {
                   borderRadius: BorderRadius.circular(12.0),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: Offset(0, 4),
                     ),
@@ -146,7 +146,7 @@ class _LinkPreviewState extends State<LinkPreview> {
             borderRadius: BorderRadius.circular(12.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.grey.withValues(alpha: 0.2),
                 blurRadius: 8,
                 offset: Offset(0, 4),
               ),

@@ -354,7 +354,7 @@ class _CSATChatMessageState extends State<CSATChatMessage> {
                   ),
                   decoration: BoxDecoration(
                     color: selectedOption == option
-                        ? widget.theme.primaryColor.withOpacity(0.1)
+                        ? widget.theme.primaryColor.withValues(alpha: 0.1)
                         : Colors.white,
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(
@@ -503,7 +503,7 @@ class RecordedCsatChatMessage extends StatelessWidget{
                 ),
                 decoration: BoxDecoration(
                   color: selectedOption == option
-                      ? theme.primaryColor.withOpacity(0.1)
+                      ? theme.primaryColor.withValues(alpha: 0.1)
                       : Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
                   border: Border.all(
