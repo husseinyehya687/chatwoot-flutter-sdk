@@ -606,74 +606,108 @@ class _ChatwootChatState extends State<ChatwootChat> with WidgetsBindingObserver
   void _handleAttachmentPressed() async{
     print('_handleAttachmentPressed called');
     
-    // Check and request permissions first
-    bool hasPermission = await PermissionHelper.hasStoragePermissions();
-    if (!hasPermission) {
-      print('Storage permission not granted, requesting...');
-      hasPermission = await PermissionHelper.requestStoragePermissionsWithFallback();
+    try {
+      // Try direct attachment without permission checks first
+      // Many file pickers work without explicit permissions on modern Android
+      final attachment = await widget.onAttachmentPressed?.call();
+      print('Attachment result: $attachment');
       
-      if (!hasPermission) {
-        print('Storage permission denied');
-        // Show user-friendly message about permission requirement
-        if (await PermissionHelper.isPermissionPermanentlyDenied()) {
-          _showPermissionPermanentlyDeniedDialog();
-        } else {
-          _showPermissionDeniedDialog();
-        }
+      if (attachment != null) {
+        // Success! Process the attachment
+        _processAttachment(attachment);
         return;
       }
+      
+      // If no attachment returned, try with permission request
+      print('No attachment selected, checking permissions...');
+      await _handleAttachmentWithPermissions();
+      
+    } catch (e) {
+      print('Error in attachment handling: $e');
+      // Fallback to permission-based approach
+      await _handleAttachmentWithPermissions();
     }
-    
-    final attachment = await widget.onAttachmentPressed?.call();
-    print('Attachment result: $attachment');
-    if(attachment != null){
-      types.Message message;
-      if(lookupMimeType(attachment.name)?.startsWith("image") ?? false){
-        message = types.ImageMessage(
-            author: _user,
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-            id: const Uuid().v4(),
-            name: attachment.name,
-            uri: attachment.path,
-            size: attachment.bytes.length,
-            status: types.Status.sending);
-      }else if(lookupMimeType(attachment.name)?.startsWith("video") ?? false){
+  }
 
-        message = types.VideoMessage(
-            author: _user,
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-            id: const Uuid().v4(),
-            name: attachment.name,
-            uri: attachment.path,
-            size: attachment.bytes.length,
-            status: types.Status.sending);
+  void _processAttachment(FileAttachment attachment) {
+    types.Message message;
+    if(lookupMimeType(attachment.name)?.startsWith("image") ?? false){
+      message = types.ImageMessage(
+          author: _user,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          id: const Uuid().v4(),
+          name: attachment.name,
+          uri: attachment.path,
+          size: attachment.bytes.length,
+          status: types.Status.sending);
+    }else if(lookupMimeType(attachment.name)?.startsWith("video") ?? false){
 
-        videoPreviewLoader.getPreview(jobId: message.id, uri: attachment.path);
-      }else if(lookupMimeType(attachment.name)?.startsWith("audio") ?? false){
-        message = types.AudioMessage(
-            author: _user,
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-            id: const Uuid().v4(),
-            name: attachment.name,
-            uri: attachment.path,
-            size: attachment.bytes.length,
-            duration: Duration.zero,
-            status: types.Status.sending);
-      }else{
-        message = types.FileMessage(
-            author: _user,
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-            id: const Uuid().v4(),
-            name: attachment.name,
-            uri: attachment.path,
-            size: attachment.bytes.length,
-            status: types.Status.sending);
+      message = types.VideoMessage(
+          author: _user,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          id: const Uuid().v4(),
+          name: attachment.name,
+          uri: attachment.path,
+          size: attachment.bytes.length,
+          status: types.Status.sending);
+
+      videoPreviewLoader.getPreview(jobId: message.id, uri: attachment.path);
+    }else if(lookupMimeType(attachment.name)?.startsWith("audio") ?? false){
+      message = types.AudioMessage(
+          author: _user,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          id: const Uuid().v4(),
+          name: attachment.name,
+          uri: attachment.path,
+          size: attachment.bytes.length,
+          duration: Duration.zero,
+          status: types.Status.sending);
+    }else{
+      message = types.FileMessage(
+          author: _user,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          id: const Uuid().v4(),
+          name: attachment.name,
+          uri: attachment.path,
+          size: attachment.bytes.length,
+          status: types.Status.sending);
+    }
+
+    _addMessage(message);
+
+    chatwootClient!
+        .sendMessage(content: attachment.name, echoId: message.id, attachment: [attachment]);
+  }
+
+  Future<void> _handleAttachmentWithPermissions() async {
+    try {
+      // Check and request permissions first
+      bool hasPermission = await PermissionHelper.hasStoragePermissions();
+      if (!hasPermission) {
+        print('Storage permission not granted, requesting...');
+        hasPermission = await PermissionHelper.requestStoragePermissionsWithFallback();
+        
+        if (!hasPermission) {
+          print('Storage permission denied');
+          // Show user-friendly message about permission requirement
+          if (await PermissionHelper.isPermissionPermanentlyDenied()) {
+            _showPermissionPermanentlyDeniedDialog();
+          } else {
+            _showPermissionDeniedDialog();
+          }
+          return;
+        }
       }
-
-      _addMessage(message);
-
-      chatwootClient!
-          .sendMessage(content: attachment.name, echoId: message.id, attachment: [attachment]);
+      
+      // Try attachment again with permissions
+      final attachment = await widget.onAttachmentPressed?.call();
+      print('Attachment result with permissions: $attachment');
+      
+      if (attachment != null) {
+        _processAttachment(attachment);
+      }
+    } catch (e) {
+      print('Error in permission-based attachment handling: $e');
     }
   }
 
