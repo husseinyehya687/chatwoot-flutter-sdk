@@ -90,7 +90,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<FileAttachment?> _handleAttachmentPressed() async{
-    return await _handleFileSelection();
+    print('_handleAttachmentPressed in main_client called');
+    
+    final result = await _handleFileSelection();
+    print('File selection result: $result');
+    
+    // Show result to user for debugging
+    if (result != null) {
+      print('Successfully selected file: ${result.name}, size: ${result.bytes.length}');
+    } else {
+      print('No file selected or selection failed');
+    }
+    
+    return result;
   }
 
 

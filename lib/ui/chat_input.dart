@@ -86,14 +86,25 @@ class _ChatInputState extends State<ChatInput> {
               ),
             ),
             // Attachment Icon
-     
-            IconButton(
-              onPressed: () {
-                widget.onAttachmentPressed();
-              },
-              icon: const Icon(
-                Icons.attach_file,
-                color: Colors.grey,
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    print('Attachment button clicked');
+                    widget.onAttachmentPressed();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: const Icon(
+                      Icons.attach_file,
+                      color: Colors.grey,
+                      size: 24,
+                    ),
+                  ),
+                ),
               ),
             ),
             // Emoji Icon

@@ -602,7 +602,9 @@ class _ChatwootChatState extends State<ChatwootChat> with WidgetsBindingObserver
   }
 
   void _handleAttachmentPressed() async{
+    print('_handleAttachmentPressed called');
     final attachment = await widget.onAttachmentPressed?.call();
+    print('Attachment result: $attachment');
     if(attachment != null){
       types.Message message;
       if(lookupMimeType(attachment.name)?.startsWith("image") ?? false){
@@ -683,7 +685,7 @@ class _ChatwootChatState extends State<ChatwootChat> with WidgetsBindingObserver
                     onEndReached: widget.onEndReached,
                     onEndReachedThreshold: widget.onEndReachedThreshold,
                     onMessageLongPress: widget.onMessageLongPress,
-                    onAttachmentPressed: _handleAttachmentPressed,
+                    onAttachmentPressed: null,
                     showUserAvatars: widget.showUserAvatars,
                     showUserNames: widget.showUserNames,
                     theme: theme,
