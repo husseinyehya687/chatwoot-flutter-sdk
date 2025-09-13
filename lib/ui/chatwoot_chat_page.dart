@@ -610,7 +610,7 @@ class _ChatwootChatState extends State<ChatwootChat> with WidgetsBindingObserver
     bool hasPermission = await PermissionHelper.hasStoragePermissions();
     if (!hasPermission) {
       print('Storage permission not granted, requesting...');
-      hasPermission = await PermissionHelper.requestStoragePermissions();
+      hasPermission = await PermissionHelper.requestStoragePermissionsWithFallback();
       
       if (!hasPermission) {
         print('Storage permission denied');
