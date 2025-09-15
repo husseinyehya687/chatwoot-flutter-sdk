@@ -894,7 +894,7 @@ class _ChatwootChatState extends State<ChatwootChat> with WidgetsBindingObserver
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         "Powered by Chatwoot",
-                        style: TextStyle(color: Colors.black45, fontSize: 12),
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     )
                   ],
